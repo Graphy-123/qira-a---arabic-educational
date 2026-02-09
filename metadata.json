@@ -1,0 +1,7 @@
+{
+  "name": "Qira'a - Arabic Educational TTS",
+  "description": "A sophisticated Arabic text-to-speech educational tool designed for Modern Standard Arabic (MSA), helping learners perfect their pronunciation and diacritics using the Gemini TTS engine.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
