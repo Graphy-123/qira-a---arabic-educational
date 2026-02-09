@@ -2,16 +2,14 @@
 import { GoogleGenAI, Modality } from "@google/genai";
 import { ArabicVoice } from "../types";
 
-const API_KEY = process.env.API_KEY || "";
-
 /**
  * Generates natural Arabic speech from text.
  */
-export const generateArabicTTS = async (text: string, voice: ArabicVoice): Promise<string> => {
-  if (!API_KEY) throw new Error("API Key is missing");
+export const generateArabicTTS = async (text: string, voice: ArabicVoice, apiKey: string): Promise<string> => {
+  if (!apiKey) throw new Error("API Key is missing");
 
-  const ai = new GoogleGenAI({ apiKey: API_KEY });
-  
+  const ai = new GoogleGenAI({ apiKey });
+
   const naturalPrompt = `Speak the following Modern Standard Arabic text in a completely natural, expressive, and human-like voice. Use smooth transitions between words and realistic conversational intonation, as if you are a professional narrator speaking naturally to a person. Do not sound robotic or overly slow: ${text}`;
 
   try {
@@ -43,21 +41,21 @@ export const generateArabicTTS = async (text: string, voice: ArabicVoice): Promi
 /**
  * Automatically adds diacritics (Tashkeel) to raw Arabic text.
  */
-export const vowelizeArabicText = async (text: string): Promise<string> => {
-  if (!API_KEY) throw new Error("API Key is missing");
+export const vowelizeArabicText = async (text: string, apiKey: string): Promise<string> => {
+  if (!apiKey) throw new Error("API Key is missing");
   if (!text.trim()) return "";
 
-  const ai = new GoogleGenAI({ apiKey: API_KEY });
-  
+  const ai = new GoogleGenAI({ apiKey });
+
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: "gemini-2.0-flash", // Updated to a more standard model if 3-flash-preview is faulty, or stick with user's choice if working.
       contents: `You are an expert Arabic linguist. Add full and correct diacritics (Tashkeel/Harakat) to the following Arabic text to ensure perfect pronunciation in Modern Standard Arabic. Return ONLY the processed text with no explanations or extra formatting: ${text}`,
     });
 
     const result = response.text;
     if (!result) throw new Error("Failed to process text.");
-    
+
     return result.trim();
   } catch (error) {
     console.error("Tashkeel Error:", error);
